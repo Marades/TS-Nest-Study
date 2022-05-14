@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "module": "commonjs",
+        "lib": ["es6"],
+        "moduleResolution": "node",
+        "noEmit": true
+    }
+}
