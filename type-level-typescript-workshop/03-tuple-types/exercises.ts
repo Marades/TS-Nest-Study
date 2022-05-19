@@ -6,7 +6,7 @@ import { Equal, Expect, TODO } from "../helpers";
  *  1. Implement a generic which extracts the first element of a tuple.
  */
 namespace one {
-  type Head<tuple extends any[]> = TODO;
+  type Head<tuple extends any[]> = tuple extends [infer head, ...any[]] ? head : never;
 
   type res1 = Head<[1, 2, 3]>;
   type test1 = Expect<Equal<res1, 1>>;
@@ -23,7 +23,7 @@ namespace one {
  *     all other elements.
  */
 namespace two {
-  type DropFirst<tuple extends any[]> = TODO;
+  type DropFirst<tuple extends any[]> = tuple extends [any, ...infer rest] ? rest : [];
 
   type res1 = DropFirst<[1, 2, 3]>;
   type test1 = Expect<Equal<res1, [2, 3]>>;
@@ -40,7 +40,7 @@ namespace two {
  *     of a tuple type.
  */
 namespace three {
-  type Append<tuple extends any[], element> = TODO;
+  type Append<tuple extends any[], element> = [...tuple, element];
 
   type res1 = Append<[1, 2, 3], 4>;
   type test1 = Expect<Equal<res1, [1, 2, 3, 4]>>;
@@ -53,7 +53,7 @@ namespace three {
  *  4. Implement a generic which concatenate two tuple types.
  */
 namespace four {
-  type Concat<tuple1 extends any[], tuple2 extends any[]> = TODO;
+  type Concat<tuple1 extends any[], tuple2 extends any[]> = [...tuple1, ...tuple2];
 
   type res1 = Concat<[1, 2, 3], [4]>;
   type test1 = Expect<Equal<res1, [1, 2, 3, 4]>>;
@@ -66,7 +66,7 @@ namespace four {
  *  5. Implement a generic which extracts the last element of a tuple.
  */
 namespace five {
-  type Last<tuple extends any[]> = TODO;
+  type Last<tuple extends any[]> = tuple extends [...any, infer tail] ? tail : never;
 
   type res1 = Last<[1, 2, 3]>;
   type test1 = Expect<Equal<res1, 3>>;
@@ -84,7 +84,7 @@ namespace bonus {
    *     and return all other elements.
    */
   namespace six {
-    type DropLast<tuple extends any[]> = TODO;
+    type DropLast<tuple extends any[]> = tuple extends [...infer rest, any] ? rest : [];
 
     type res1 = DropLast<[1, 2, 3]>;
     type test1 = Expect<Equal<res1, [1, 2]>>;
@@ -101,7 +101,7 @@ namespace bonus {
    *     of a tuple type.
    */
   namespace seven {
-    type Prepend<tuple extends any[], element> = TODO;
+    type Prepend<tuple extends any[], element> = [element, ...tuple];
 
     type res1 = Prepend<[1, 2, 3], 4>;
     type test1 = Expect<Equal<res1, [4, 1, 2, 3]>>;
@@ -115,7 +115,7 @@ namespace bonus {
    *     a tuple or not.
    */
   namespace eight {
-    type IsTuple<tuple> = TODO;
+    type IsTuple<tuple> = tuple extends [] | [any, ...any] ? true : false;
 
     type res1 = IsTuple<[1, 2]>;
     type test1 = Expect<Equal<res1, true>>;
