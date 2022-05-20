@@ -8,7 +8,7 @@ import { Equal, Expect, TODO } from "../helpers";
  *    trafficLight is "green" and "stop" otherwise.
  */
 namespace one {
-  type Drive<trafficLight> = TODO;
+  type Drive<trafficLight> = trafficLight extends 'green' ? 'go' : 'stop';
 
   type res1 = Drive<"green">;
   type test1 = Expect<Equal<res1, "go">>;
@@ -27,7 +27,7 @@ namespace one {
  * 2. Implement a generic taking two union types and excluding one from the other.
  */
 namespace two {
-  type Exclude<union, excluded> = TODO;
+  type Exclude<union, excluded> = union extends excluded ? never : union;
 
   type res1 = Exclude<1 | 2 | 3, 1>;
   type test1 = Expect<Equal<res1, 2 | 3>>;
@@ -49,7 +49,7 @@ namespace bonus {
    *    assignable to `included`.
    */
   namespace three {
-    type Extract<union, included> = TODO;
+    type Extract<union, included> = union extends included ? union : never;
 
     // types used in unit tests:
 
