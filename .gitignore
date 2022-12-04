@@ -1,2 +1,5 @@
 **/node_modules/
 **/dist/
+**/script
+nestia-boilerplate/
+**/.DS_Store
