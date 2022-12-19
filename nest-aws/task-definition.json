@@ -1,0 +1,33 @@
+{
+  "family": "nest-aws-def",
+  "taskRoleArn": "arn:aws:iam::774654182296:role/ecsTaskExecutionRole",
+  "executionRoleArn": "arn:aws:iam::774654182296:role/ecsTaskExecutionRole",
+  "networkMode": null,
+  "containerDefinitions": [
+    {
+      "name": "nest-aws-container",
+      "image": "774654182296.dkr.ecr.ap-northeast-2.amazonaws.com/nest-aws-repository:latest",
+      "portMappings": [
+        {
+          "hostPort": 0,
+          "protocol": "tcp",
+          "containerPort": 3000
+        }
+      ],
+      "memory": 491,
+      "memoryReservation": 491,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "secretOptions": null,
+        "options": {
+          "awslogs-group": "/ecs/nest-aws-def",
+          "awslogs-region": "ap-northeast-2",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ],
+  "requiresCompatibilities": ["EC2"],
+  "cpu": "512",
+  "memory": "491"
+}
