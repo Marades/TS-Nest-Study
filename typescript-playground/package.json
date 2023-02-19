@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "@types/node": "^18.14.0"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.13",
+    "typescript": "^4.9.5"
+  }
+}
