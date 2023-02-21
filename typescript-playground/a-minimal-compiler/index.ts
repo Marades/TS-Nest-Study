@@ -38,4 +38,6 @@ compile(process.argv.slice(2), {
   noImplicitAny: true,
   target: ts.ScriptTarget.ES5,
   module: ts.ModuleKind.CommonJS,
+  experimentalDecorators: true,
+  emitDecoratorMetadata: true,
 });

@@ -1,13 +1,8 @@
 import "reflect-metadata";
-
 type CustomDecorator<TKey = string> = MethodDecorator &
   ClassDecorator & {
     KEY: TKey;
   };
-
-function test() {
-  console.log("test");
-}
 
 function SetMetadata<K = string | symbol, V = any>(
   metadataKey: K,
