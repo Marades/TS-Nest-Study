@@ -1,4 +1,5 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Client, Collection, GatewayIntentBits } from 'discord.js';
 import DiscordMessage from 'src/modules/discord/domains/discord-message';
 import ReplyFactory from 'src/modules/discord/domains/reply-factory';
@@ -7,10 +8,10 @@ interface DiscordClient extends Client {
   commands?: Collection<any, any>;
 }
 
-@Injectable({})
+@Injectable()
 export class DiscordService implements OnModuleInit {
   client: DiscordClient;
-  constructor() {
+  constructor(private configService: ConfigService) {
     this.client = new Client({
       intents: [
         // Intent를 설정합니다. 설정하지 않으면 CLIENT_MISSING_INTENTS 오류가 발생합니다.
@@ -36,8 +37,6 @@ export class DiscordService implements OnModuleInit {
       reply.send();
     });
 
-    this.client.login(
-      'MTA3Njg4MDI2ODkxMDE0NTYwNg.GzjcFR.NrBUcyKl9bBvXzegvTeu7W-GpoHg2KMCSJEQK0',
-    );
+    this.client.login(this.configService.get('discord.token'));
   }
 }
