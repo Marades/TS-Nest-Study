@@ -1,5 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Client, Collection, GatewayIntentBits } from 'discord.js';
+import DiscordMessage from 'src/modules/discord/domains/discord-message';
+import ReplyFactory from 'src/modules/discord/domains/reply-factory';
 
 interface DiscordClient extends Client {
   commands?: Collection<any, any>;
@@ -7,7 +9,6 @@ interface DiscordClient extends Client {
 
 @Injectable({})
 export class DiscordService implements OnModuleInit {
-  prefix = '!';
   client: DiscordClient;
   constructor() {
     this.client = new Client({
@@ -26,17 +27,13 @@ export class DiscordService implements OnModuleInit {
     );
 
     this.client.on('messageCreate', (msg) => {
-      if (msg.author.bot) return;
-      if (!msg.content.startsWith(this.prefix)) return;
-      if (msg.content.slice(0, this.prefix.length) !== this.prefix) return;
+      const message = new DiscordMessage(msg);
+      if (!message.forThisBot()) return;
 
-      const args = msg.content.slice(this.prefix.length).trim().split(/ +/g);
-      const command = args.shift().toLowerCase();
+      const factory = new ReplyFactory();
+      const reply = factory.getReply(message);
 
-      this.client.commands = new Collection();
-      let cmd = this.client.commands.get(command);
-
-      if (cmd) cmd.run(this.client, msg, args);
+      reply.send();
     });
 
     this.client.login(
