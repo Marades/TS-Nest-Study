@@ -1,4 +1,4 @@
-import DiscordMessage from '../discord-message';
+import DiscordMessage from 'src/domains/discord/discord-message';
 
 export default class Reply {
   key: string;

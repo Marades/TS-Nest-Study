@@ -1,4 +1,4 @@
-import DiscordMessage from 'src/modules/discord/domains/discord-message';
+import DiscordMessage from 'src/domains/discord/discord-message';
 import Reply from './reply';
 
 export default class BarReply extends Reply {
