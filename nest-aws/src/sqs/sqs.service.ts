@@ -1,57 +1,50 @@
+import {
+  DeleteMessageCommand,
+  ReceiveMessageCommand,
+  SQSClient,
+  SendMessageCommand,
+} from '@aws-sdk/client-sqs';
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { SQS, config } from 'aws-sdk';
-config.update({ region: 'ap-northeast-2' });
 
 @Injectable()
 export class SqsService implements OnModuleInit {
-  sqs: SQS;
-  queueURL =
-    'https://sqs.ap-northeast-2.amazonaws.com/774654182296/nest-simple-queue';
+  client: SQSClient;
+  queueURL = '';
   constructor() {}
   onModuleInit() {
-    this.sqs = new SQS({ apiVersion: '2012-11-05' });
-    // this.sendMessage('test');
-    this.receiveMessage();
+    this.client = new SQSClient({ region: 'ap-northeast-2' });
+    // this.sendMessage('v3 test');
+    // this.receiveMessage();
   }
 
-  sendMessage(body: string) {
+  async sendMessage(body: string) {
     const payload = this.getMessagePayload(body);
-    this.sqs.sendMessage(payload, (err, data) => {
-      if (err) {
-        console.log('Error', err);
-      } else {
-        console.log('Success', data);
-      }
-    });
+    const command = new SendMessageCommand(payload);
+    const data = await this.client.send(command);
+    console.log('Send Success : ', data);
   }
 
-  receiveMessage() {
+  async receiveMessage() {
     const params = {
       AttributeNames: ['SentTimestamp'],
       MaxNumberOfMessages: 10,
       MessageAttributeNames: ['All'],
       QueueUrl: this.queueURL,
       VisibilityTimeout: 20,
-      WaitTimeSeconds: 0,
+      WaitTimeSeconds: 5,
     };
+    const command = new ReceiveMessageCommand(params);
+    const response = await this.client.send(command);
 
-    this.sqs.receiveMessage(params, function (err, data) {
-      if (err) {
-        console.log('Receive Error', err);
-      } else if (data.Messages) {
-        const deleteParams = {
-          QueueUrl: this.queueURL,
-          ReceiptHandle: data.Messages[0].ReceiptHandle,
-        };
-        this.sqs.deleteMessage(deleteParams, function (err, data) {
-          if (err) {
-            console.log('Delete Error', err);
-          } else {
-            console.log('Message Deleted', data);
-          }
-        });
-      }
-    });
+    console.log('Receive Success : ', response);
+
+    const deleteParams = {
+      QueueUrl: this.queueURL,
+      ReceiptHandle: response.Messages[0].ReceiptHandle,
+    };
+    const deleteCommand = new DeleteMessageCommand(deleteParams);
+    const deleteResponse = await this.client.send(deleteCommand);
+    console.log('Delete Success : ', deleteResponse);
   }
 
   getMessagePayload(body: string) {
@@ -73,9 +66,9 @@ export class SqsService implements OnModuleInit {
         },
       },
       MessageBody: body,
+      QueueUrl: this.queueURL,
       // MessageDeduplicationId: "TheWhistler",  // Required for FIFO queues
       // MessageGroupId: "Group1",  // Required for FIFO queues
-      QueueUrl: this.queueURL,
     };
   }
 }
