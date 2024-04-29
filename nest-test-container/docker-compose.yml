@@ -1,0 +1,26 @@
+services:
+  mysql:
+    image: mysql:8.3
+    container_name: mysql
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: qwer1234
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    networks:
+      - internal
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    networks:
+      - internal
+    depends_on:
+      - mysql
+networks:
+  internal:
+    driver: bridge
