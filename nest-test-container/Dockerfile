@@ -16,7 +16,7 @@ ENV PORT=3000
 WORKDIR ${PROJECT_DIR}
 COPY --from=builder ${PROJECT_DIR}/dist ./dist
 COPY --from=builder ${PROJECT_DIR}/node_modules ./node_modules
-COPY env ./env
+COPY .env .env
 
 EXPOSE $PORT
 
