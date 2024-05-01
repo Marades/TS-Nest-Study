@@ -11,6 +11,9 @@ services:
       - --collation-server=utf8mb4_unicode_ci
     networks:
       - internal
+    volumes:
+      - mysql:/var/lib/mysql
+
   server:
     build:
       context: .
@@ -24,3 +27,6 @@ services:
 networks:
   internal:
     driver: bridge
+volumes:
+  mysql:
+    # external: true
